@@ -11,6 +11,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use SweetAlert2\Laravel\Traits\WithSweetAlert;
@@ -193,10 +195,12 @@ class SignupForm extends Component
             'Cache-Control' => 'max-age=0'
         ];
         
-        // Afficher un toast côté front (Livewire ou session flash)
         $this->resets();
         $this->swalSuccess([
-            'title' => 'Inscription réussie',
+            'title'  => 'Inscription réussie',
+            'text'   => 'Votre inscription a été prise en compte.',
+            'icon'   => 'success',
+            'footer' => "<a href='".route('paiement',$code)."' target='_blank' rel='noopener'>Procéder au paiement</a>",
         ]);
        
         // Télécharger le fichier et le supprimer après envoi

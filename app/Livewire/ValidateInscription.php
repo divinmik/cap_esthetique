@@ -36,8 +36,14 @@ class ValidateInscription extends Component
         }
     }
 
-    public function mount(){
+    public function mount($code = null){
         $this->currentUrl = url()->current();
+        if($code){
+            $this->code = $code;
+             $this->candidat = Inscription::where('is_valide','0')
+            ->where('code',$this->code)
+            ->first();
+        }
         $this->datas = Inscription::where('is_valide','0')->get();
        
     }
@@ -54,116 +60,116 @@ class ValidateInscription extends Component
         return view('livewire.validate-inscription');
     }
     
-public function paiement_conf(): void
-{
-   
-    // Validation
-    $this->validate(
-        [
-            'code'        => [
-                'required',
-                function ($attribute, $value, $fail) {
-                   $r = Inscription::where('is_valide','0')
-                    ->where('code',$value)
-                    ->first();
-                    if (empty($r)) {
-                        return $fail(__('Code non reconnu'));
-                    }
-                },
-            ],
-            'payer_phone' => [
-                'required',
-                'phone:CG',
-                function ($attribute, $value, $fail) {
-                    // Normalise en E.164 (ex: +24206xxxxxxx)
-                    $tel = Helper_function::phone($value);
-                    // Après +242, les deux chiffres opérateur commencent à l'index 4
-                   /*  $ope = substr($tel, 3, 2);
-                    if ($ope !== '06') {
-                        return $fail(__('Insérez un numéro MTN'));
-                    } */
-                },
-            ],
-        ],
-        [
-            '*.required' => 'Les champs avec * sont obligatoires',
-            '*.phone'    => 'Numéro de téléphone incorrect',
-        ]
-    );
-
-
-        $api = new MobileMoneyService();
-
-        // Normalise le numéro pour l’API
-        $payerPhone = Helper_function::phone($this->payer_phone);
-
-        // Appel d'initiation
-        $resultat = $api->collect([
-            'external_ref' => 'ref-' . Str::random(10),
-            'amount'       => env('MONTANT_INITIAL'), // Montant fixe (XAF)
-            'currency'     => 'XAF',
-            'payer_phone'  => $payerPhone,
-            'description'  => 'Paiement inscription CAP ESTHETIQUE',
-        ]);
-
-        // Vérif code retour
-        if (!isset($resultat['status_code']) || (int)$resultat['status_code'] !== 201) {
-            $this->dispatch('swal', [
-                'icon'  => 'error',
-                'title' => 'Merci de réessayer',
-                'text'  => 'Erreur interne lors de l’initialisation du paiement.',
-            ]);
-            return;
-        }
-
-        // Données API
-        $data = $resultat['data'] ?? [];
-
-        // Sécurise l'accès aux clés
-        $transactionId = $data['transaction_id'] ?? null;
-        if (!$transactionId) {
-            $this->dispatch('swal', [
-                'icon'  => 'error',
-                'title' => 'Merci de réessayer',
-                'text'  => 'Réponse incomplète du prestataire (transaction_id manquant).',
-            ]);
-            return;
-        }
-
-        // Persistence (initialisation)
-        $id_inscription = Momopaiement::create([
-            'inscription_id' => $this->candidat->id,
-            'nature'          => "inscription",
-            'error'          => $data['error']         ?? null,
-            'message'        => $data['message']       ?? null,
-            'status'         => $data['status']        ?? null,
-            'transaction_id' => $transactionId,
-            'external_ref'   => $data['external_ref']  ?? null,
-            'payment_url'    => $data['payment_url']   ?? null,
-            'operator'       => $data['operator']      ?? 'MTN',
-            'payer_phone'    => $data['payer_phone']   ?? $payerPhone,
-        ]);
-
-        // Démarre le polling
-        $this->transactionID = $transactionId;
-        $this->status        = strtoupper($data['status'] ?? 'PENDING');
-        $this->polling       = true;
-        $this->elapsed       = 0; // réinitialise le compteur
-        
-        // Ouvre l’alerte avec compteur (même canal que checkStatus)
-        $this->dispatch('swal', [
-            'action' => 'status',
-            'icon'   => 'success',
-            'title'  => 'paiement initialisé',
-            'text'   => 'Veuillez valider le paiement sur votre téléphone. Composer *105# '
-        ]);
-
-        $this->reset_data();
-        
-        return;
-
+    public function paiement_conf(): void
+    {
     
-}
+        // Validation
+        $this->validate(
+            [
+                'code'        => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                    $r = Inscription::where('is_valide','0')
+                        ->where('code',$value)
+                        ->first();
+                        if (empty($r)) {
+                            return $fail(__('Code non reconnu'));
+                        }
+                    },
+                ],
+                'payer_phone' => [
+                    'required',
+                    'phone:CG',
+                    function ($attribute, $value, $fail) {
+                        // Normalise en E.164 (ex: +24206xxxxxxx)
+                        $tel = Helper_function::phone($value);
+                        // Après +242, les deux chiffres opérateur commencent à l'index 4
+                    /*  $ope = substr($tel, 3, 2);
+                        if ($ope !== '06') {
+                            return $fail(__('Insérez un numéro MTN'));
+                        } */
+                    },
+                ],
+            ],
+            [
+                '*.required' => 'Les champs avec * sont obligatoires',
+                '*.phone'    => 'Numéro de téléphone incorrect',
+            ]
+        );
+
+
+            $api = new MobileMoneyService();
+
+            // Normalise le numéro pour l’API
+            $payerPhone = Helper_function::phone($this->payer_phone);
+
+            // Appel d'initiation
+            $resultat = $api->collect([
+                'external_ref' => 'ref-' . Str::random(10),
+                'amount'       => env('MONTANT_INITIAL'), // Montant fixe (XAF)
+                'currency'     => 'XAF',
+                'payer_phone'  => $payerPhone,
+                'description'  => 'Paiement inscription CAP ESTHETIQUE',
+            ]);
+
+            // Vérif code retour
+            if (!isset($resultat['status_code']) || (int)$resultat['status_code'] !== 201) {
+                $this->dispatch('swal', [
+                    'icon'  => 'error',
+                    'title' => 'Merci de réessayer',
+                    'text'  => 'Erreur interne lors de l’initialisation du paiement.',
+                ]);
+                return;
+            }
+
+            // Données API
+            $data = $resultat['data'] ?? [];
+
+            // Sécurise l'accès aux clés
+            $transactionId = $data['transaction_id'] ?? null;
+            if (!$transactionId) {
+                $this->dispatch('swal', [
+                    'icon'  => 'error',
+                    'title' => 'Merci de réessayer',
+                    'text'  => 'Réponse incomplète du prestataire (transaction_id manquant).',
+                ]);
+                return;
+            }
+
+            // Persistence (initialisation)
+            $id_inscription = Momopaiement::create([
+                'inscription_id' => $this->candidat->id,
+                'nature'          => "inscription",
+                'error'          => $data['error']         ?? null,
+                'message'        => $data['message']       ?? null,
+                'status'         => $data['status']        ?? null,
+                'transaction_id' => $transactionId,
+                'external_ref'   => $data['external_ref']  ?? null,
+                'payment_url'    => $data['payment_url']   ?? null,
+                'operator'       => $data['operator']      ?? 'MTN',
+                'payer_phone'    => $data['payer_phone']   ?? $payerPhone,
+            ]);
+
+            // Démarre le polling
+            $this->transactionID = $transactionId;
+            $this->status        = strtoupper($data['status'] ?? 'PENDING');
+            $this->polling       = true;
+            $this->elapsed       = 0; // réinitialise le compteur
+            
+            // Ouvre l’alerte avec compteur (même canal que checkStatus)
+            $this->dispatch('swal', [
+                'action' => 'status',
+                'icon'   => 'success',
+                'title'  => 'paiement initialisé',
+                'text'   => 'Veuillez valider le paiement sur votre téléphone. Composer *105# '
+            ]);
+
+            $this->reset_data();
+            
+            return;
+
+        
+    }
 
 
     /**

@@ -4,8 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\User;
+use App\Models\Invoice;
 use App\Models\ModuleCap;
 use Illuminate\Support\Str;
+use App\Models\CourseModule;
 use App\Models\Helper_function;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
@@ -42,9 +44,10 @@ class User extends Authenticatable
         'profile_photo_path',
         'is_valide',
         'email_verified_at',
-        'password',
         'is_actif',
         'statut',
+        'role',
+        'password',
         'user_id',
     ];
 
@@ -71,9 +74,22 @@ class User extends Authenticatable
         ];
     }
     
-    public function modules()
+   /*  public function modules()
     {
         return $this->hasMany(ModuleCap::class);
+    } */
+
+    public function invoices() {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function quizzes() {
+        // table pivot candidate_quiz (candidate_id, quiz_id, status, score, ...)
+       // return $this->belongsToMany(Quiz::class, 'candidate_quiz')->withPivot(['status','score'])->withTimestamps();
+    }
+
+    public function modules() {
+        return $this->hasMany(CourseModule::class);
     }
 
     public function UniqueCode($statut)

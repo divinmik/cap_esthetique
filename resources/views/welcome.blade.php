@@ -64,80 +64,126 @@
         </section>
 
 
-        <!-- Video & Gallery Section -->
-        <section class="py-16 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <!-- Video Section -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-pink-600 text-white p-4">
-                            <h3 class="text-xl font-bold flex items-center">
-                                🎀 Formation Excellence
-                            </h3>
-                        </div>
-                        <div class="relative pt-[56.25%]">
-                            <video 
-                                class="absolute top-0 left-0 w-full h-full object-cover" 
-                                src="{{ asset('assets/videos/presentation_formation.mp4') }}" 
-                                autoplay 
-                                muted 
-                                loop 
-                                playsinline
-                            ></video>
-                        </div>
-                    </div>
+       <!-- Video & Gallery Section -->
+        <section class="py-12 bg-gray-50">
+  <div class="mx-auto px-4 max-w-5xl">
+    <div class="grid md:grid-cols-2 gap-6 place-items-center">
 
-                    
-                    <!-- Gallery Section -->
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="bg-pink-600 text-white p-4">
-                            <h3 class="text-xl font-bold flex items-center">
-                                ✨ Nos Réalisations
-                            </h3>
-                        </div>
+      <!-- Video (même taille que la galerie) -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md">
+        <div class="bg-pink-600 text-white p-3">
+          <h3 class="text-lg font-bold flex items-center">🎀 Formation Excellence</h3>
+        </div>
+        <!-- Hauteur réduite, identique aux slides -->
+        <div class="relative h-96 sm:h-96 md:h-96">
+          <video
+            class="absolute inset-0 w-full h-full object-cover"
+            src="{{ asset('assets/videos/presentation_formation.mp4') }}"
+            autoplay
+            muted
+            loop
+            playsinline
+          ></video>
+        </div>
+      </div>
 
-                        <div class="p-4">
-                            <!-- Swiper -->
-                            <div class="swiper mySwiper">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide text-center">
-                                        <img src="{{ asset('assets/images/soins-visage.png') }}" alt="Soins du visage" class="rounded-lg w-full">
-                                        <p class="mt-2 font-semibold">Soins du visage</p>
-                                    </div>
-                                    <div class="swiper-slide text-center">
-                                        <img src="{{ asset('assets/images/soins-visage.png') }}" alt="Maquillage" class="rounded-lg w-full">
-                                        <p class="mt-2 font-semibold">Maquillage</p>
-                                    </div>
-                                    <div class="swiper-slide text-center">
-                                        <img src="{{ asset('assets/images/soins-visage.png') }}" alt="Épilation" class="rounded-lg w-full">
-                                        <p class="mt-2 font-semibold">Épilation</p>
-                                    </div>
-                                    <div class="swiper-slide text-center">
-                                        <img src="{{ asset('assets/images/soins-visage.png') }}" alt="Beauté des mains" class="rounded-lg w-full">
-                                        <p class="mt-2 font-semibold">Beauté des mains</p>
-                                    </div>
-                                    <div class="swiper-slide text-center">
-                                        <img src="{{ asset('assets/images/soins-visage.png') }}" alt="Soins du corps" class="rounded-lg w-full">
-                                        <p class="mt-2 font-semibold">Soins du corps</p>
-                                    </div>
-                                    <div class="swiper-slide text-center">
-                                        <img src="{{ asset('assets/images/soins-visage.png') }}" alt="Formation pratique" class="rounded-lg w-full">
-                                        <p class="mt-2 font-semibold">Formation pratique</p>
-                                    </div>
-                                </div>
+      <!-- Galerie (inchangée, hauteur réduite) -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-md">
+        <div class="bg-pink-600 text-white p-3">
+          <h3 class="text-lg font-bold flex items-center">✨ Nos Réalisations</h3>
+        </div>
 
-                                <!-- Pagination -->
-                                <div class="swiper-pagination mt-2"></div>
+        <div class="p-3">
+          <div class="relative">
+            <!-- Rail défilable -->
+            <div id="rail"
+                 class="flex gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide"
+                 aria-live="polite">
 
-                                <!-- Navigation boutons -->
-                                <div class="swiper-button-next"></div>
-                                <div class="swiper-button-prev"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <!-- Slides (hauteur réduite) -->
+              <figure class="relative h-96 sm:h-80 md:h-80 w-[160px] snap-start rounded-lg overflow-hidden shrink-0">
+                <img src="{{ asset('assets/images/soins-visage.png') }}" alt="Soins du visage" class="w-full h-full object-cover">
+                <figcaption class="absolute inset-x-0 bottom-0">
+                  <div class="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-0.5">
+                    <span class="font-semibold">Soins du visage</span>
+                  </div>
+                </figcaption>
+              </figure>
+
+              <figure class="relative h-96 sm:h-80 md:h-80 w-[160px] snap-start rounded-lg overflow-hidden shrink-0">
+                <img src="{{ asset('assets/images/maquillage.jpg') }}" alt="Maquillage" class="w-full h-full object-cover">
+                <figcaption class="absolute inset-x-0 bottom-0">
+                  <div class="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-0.5">
+                    <span class="font-semibold">Maquillage</span>
+                  </div>
+                </figcaption>
+              </figure>
+
+              <figure class="relative h-96 sm:h-80 md:h-80 w-[160px] snap-start rounded-lg overflow-hidden shrink-0">
+                <img src="{{ asset('assets/images/epilation.jpg') }}" alt="Épilation" class="w-full h-full object-cover">
+                <figcaption class="absolute inset-x-0 bottom-0">
+                  <div class="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-0.5">
+                    <span class="font-semibold">Épilation</span>
+                  </div>
+                </figcaption>
+              </figure>
+
+              <figure class="relative h-96 sm:h-80 md:h-80 w-[160px] snap-start rounded-lg overflow-hidden shrink-0">
+                <img src="{{ asset('assets/images/beaute-mains.jpg') }}" alt="Beauté des mains" class="w-full h-full object-cover">
+                <figcaption class="absolute inset-x-0 bottom-0">
+                  <div class="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-0.5">
+                    <span class="font-semibold">Beauté des mains</span>
+                  </div>
+                </figcaption>
+              </figure>
+
+              <figure class="relative h-96 sm:h-80 md:h-80 w-[160px] snap-start rounded-lg overflow-hidden shrink-0">
+                <img src="{{ asset('assets/images/soin_corps.png') }}" alt="Soins du corps" class="w-full h-full object-cover">
+                <figcaption class="absolute inset-x-0 bottom-0">
+                  <div class="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-0.5">
+                    <span class="font-semibold">Soins du corps</span>
+                  </div>
+                </figcaption>
+              </figure>
+
+              <figure class="relative h-96 sm:h-80 md:h-80 w-[160px] snap-start rounded-lg overflow-hidden shrink-0">
+                <img src="{{ asset('assets/images/theorie.png') }}" alt="Formation pratique" class="w-full h-full object-cover">
+                <figcaption class="absolute inset-x-0 bottom-0">
+                  <div class="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-0.5">
+                    <span class="font-semibold">Formation pratique</span>
+                  </div>
+                </figcaption>
+              </figure>
             </div>
-        </section>
+
+            <!-- Flèches (compactes) -->
+            <button id="prevBtn" type="button"
+                    class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 shadow px-2 py-1 text-xs hover:bg-white focus:outline-none">
+              ←
+            </button>
+            <button id="nextBtn" type="button"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 shadow px-2 py-1 text-xs hover:bg-white focus:outline-none">
+              →
+            </button>
+          </div>
+
+          <!-- Indicateurs -->
+          <div id="dots" class="mt-2 flex items-center justify-center gap-1.5"></div>
+
+          <p class="mt-1.5 text-center text-[11px] text-gray-500">Glissez ou utilisez les contrôles</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Optionnel : cacher la scrollbar -->
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
 
         <!-- Pricing Section -->
         <section class="py-16 bg-white">
@@ -258,12 +304,12 @@
                         <div class="flex justify-center mt-6">
                             <img 
                                 src="{{ asset('assets/images/promotrice-jeane.jpeg') }}" 
-                                alt="MADAME JEANE DE POTO" 
+                                alt="MADAME Giljeanny MAGANIA" 
                                 class="w-48 h-64 object-cover rounded-xl"
                             >
                         </div>
                         <div class="p-6 text-center">
-                            <h3 class="text-xl font-bold text-gray-800">MADAME JEANE DE POTO</h3>
+                            <h3 class="text-xl font-bold text-gray-800">MADAME Giljeanny MAGANIA</h3>
                             <div class="text-pink-600 font-semibold mt-1">COORDONATRICE ET PROMOTRICE</div>
                             <div class="text-gray-500 mt-1">CAP Esthétique</div>
                             <p class="mt-4 text-gray-600 italic">"Votre réussite est notre priorité absolue."</p>
@@ -431,11 +477,32 @@
                 </h2>
 
                 <!-- Grid des partenaires -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-6 items-center justify-items-center">
-                    <img src="{{ asset('assets/images/partner1.jpeg') }}" alt="Partenaire 1" class="h-20 object-contain">
-                    <img src="{{ asset('assets/images/partner1.jpeg') }}" alt="Partenaire 1" class="h-20 object-contain">
-                    <img src="{{ asset('assets/images/partner1.jpeg') }}" alt="Partenaire 1" class="h-20 object-contain">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-6 items-start justify-items-center">
+                <!-- Partenaire 1 -->
+                <figure class="w-full max-w-[160px] text-center">
+                    <img
+                    src="{{ asset('assets/images/partner1.jpeg') }}"
+                    alt="YVES ROCHER FRANCE"
+                    class="h-20 mx-auto object-contain"
+                    >
+                    <figcaption class="mt-2 text-xs sm:text-sm font-medium text-gray-700">
+                    YVES ROCHER FRANCE
+                    </figcaption>
+                </figure>
+
+                <!-- Partenaire 2 -->
+                <figure class="w-full max-w-[160px] text-center">
+                    <img
+                    src="{{ asset('assets/images/partner2.jpg') }}"
+                    alt="KIKO MILANO"
+                    class="h-20 mx-auto object-contain"
+                    >
+                    <figcaption class="mt-2 text-xs sm:text-sm font-medium text-gray-700">
+                    KIKO MILANO
+                    </figcaption>
+                </figure>
                 </div>
+
             </div>
         </section>
 @endsection

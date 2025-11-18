@@ -5,10 +5,10 @@
     </x-slot>
 
     @if(auth()->user()->statut == "admin")
-        @include('livewire.sectiondash.dash_admin')
+        @livewire('dash.admin-dashboard')
     @endif
     @if(auth()->user()->statut == "candidat")
-        @include('livewire.sectiondash.dash_candidat')
+        @livewire('dash.dash-candidat')
     @endif
     @if(auth()->user()->statut == "professeur")
         @include('livewire.sectiondash.dash_professeur')

@@ -125,7 +125,7 @@
                                              <div class="grid-nav-icon"><i class="far fa-address-card"></i></div>
                                              <span class="grid-nav-content">Profile</span>
                                          </a>
-                                         <a href="/#!" class="grid-nav-item">
+                                         <a href="{{ route('message') }}" class="grid-nav-item">
                                              <div class="grid-nav-icon"><i class="far fa-comments"></i></div>
                                              <span class="grid-nav-content">Messages</span>
                                          </a>

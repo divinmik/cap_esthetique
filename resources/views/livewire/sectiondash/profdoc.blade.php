@@ -105,10 +105,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <p class="text-muted fw-medium mb-2">Facture en attente</p>
-                                    <h4 class="mb-0">0</h4>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>

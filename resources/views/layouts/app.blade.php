@@ -123,6 +123,11 @@
         }
      
     </style>
+    <!-- Utilities -->
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
     @livewireStyles
    
 </head>
@@ -168,10 +173,18 @@
                         class="nav-btn bg-white text-pink-600 px-4 py-2 rounded-full font-medium flex items-center">
                             👨‍🏫 Formateurs
                         </a> --}}
+                        @if (auth()->check())
+                        <a href="{{ route('dash') }}"
+                        class="nav-btn bg-[var(--secondary-gold)] text-pink-700 px-4 py-2 rounded-full font-medium flex items-center">
+                            🔐 Retourne sur le tableau de bord
+                        </a>
+                        @else
                         <a href="{{ route('login') }}"
                         class="nav-btn bg-[var(--secondary-gold)] text-pink-700 px-4 py-2 rounded-full font-medium flex items-center">
                             🔐 Connexion
                         </a>
+                        @endif
+                        
                     </nav>
                 </div>
 
@@ -267,6 +280,98 @@
     @livewireScripts()
     @vite('resources/js/app.js')
     @stack('scripts')
+    <script>
+  (function () {
+    const rail = document.getElementById('rail');
+    const slides = Array.from(rail.children);
+    const prev = document.getElementById('prevBtn');
+    const next = document.getElementById('nextBtn');
+    const dotsWrap = document.getElementById('dots');
+
+    // Création des indicateurs
+    const dots = slides.map((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'w-2.5 h-2.5 rounded-full bg-gray-300 hover:bg-gray-400 transition';
+      b.setAttribute('aria-label', 'Aller à la diapositive ' + (i + 1));
+      b.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(b);
+      return b;
+    });
+
+    let index = 0;
+    let autoplayMs = 3500;
+    let timer = null;
+
+    function itemWidth() {
+      // largeur du slide + gap estimée via getBoundingClientRect()
+      const s = slides[0];
+      if (!s) return 0;
+      const w = s.getBoundingClientRect().width;
+      // gap = 0 si 1er, sinon delta entre 2
+      if (slides.length > 1) {
+        const b0 = slides[0].getBoundingClientRect();
+        const b1 = slides[1].getBoundingClientRect();
+        return b1.left - b0.left;
+      }
+      return w;
+    }
+
+    function updateDots() {
+      dots.forEach((d, i) => {
+        d.className = 'w-2.5 h-2.5 rounded-full transition ' + (i === index ? 'bg-pink-600' : 'bg-gray-300 hover:bg-gray-400');
+      });
+    }
+
+    function goTo(i) {
+      index = (i + slides.length) % slides.length;
+      rail.scrollTo({ left: index * itemWidth(), behavior: 'smooth' });
+      updateDots();
+      restartAutoplay();
+    }
+
+    function nextSlide() { goTo(index + 1); }
+    function prevSlide() { goTo(index - 1); }
+
+    prev.addEventListener('click', prevSlide);
+    next.addEventListener('click', nextSlide);
+
+    // Auto défilement
+    function startAutoplay() {
+      stopAutoplay();
+      timer = setInterval(nextSlide, autoplayMs);
+    }
+    function stopAutoplay() { if (timer) clearInterval(timer); }
+    function restartAutoplay() { stopAutoplay(); startAutoplay(); }
+
+    // Pause au survol
+    rail.addEventListener('mouseenter', stopAutoplay);
+    rail.addEventListener('mouseleave', startAutoplay);
+
+    // Synchro lors d'un scroll manuel (snap)
+    let raf = null;
+    rail.addEventListener('scroll', () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const w = itemWidth();
+        if (w > 0) {
+          index = Math.round(rail.scrollLeft / w);
+          updateDots();
+        }
+      });
+    });
+
+    // Ajuste au resize
+    window.addEventListener('resize', () => {
+      // réaligne sur le bon index après un resize
+      rail.scrollTo({ left: index * itemWidth(), behavior: 'instant' in window ? 'instant' : 'auto' });
+    });
+
+    // Init
+    updateDots();
+    startAutoplay();
+  })();
+</script>
     <script>
         feather.replace();
         

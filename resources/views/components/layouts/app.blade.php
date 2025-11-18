@@ -94,12 +94,99 @@
 
 
 
-
     @include('sweetalert::alert')
     @include('sweetalert2::index')
     @livewireScripts()
     @vite('resources/js/app.js')
     @stack('scripts')
+    <script>
+    let swalInterval = null;
+
+    window.addEventListener('swal', (e) => {
+        const payload = e?.detail ?? {};
+        const first = Array.isArray(payload) ? (payload[0] ?? {}) : payload;
+        const action = first?.action;
+        
+        if (action === 'start') {
+        // Si une ancienne popup existe, on nettoie d'abord
+        try {
+            if (typeof Swal.isVisible === 'function' && Swal.isVisible()) Swal.close();
+        } catch (_) {}
+        if (swalInterval) { clearInterval(swalInterval); swalInterval = null; }
+
+        Swal.fire({
+            icon: first.icon || 'info',
+            title: first.title || 'Vérification…',
+            html: `
+            <div>
+                <div>Merci de confirmer votre paiement en tapant *105# .</div>
+                <div>Temps restant : <b id="swal-remaining"></b> s</div>
+            </div>
+            `,
+            timer: Number(first.timer) || 30000,
+            timerProgressBar: true,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+            const html = Swal.getHtmlContainer();
+            const $b = html ? html.querySelector('#swal-remaining') : null;
+
+            // Par sécurité: clear avant de recréer
+            if (swalInterval) { clearInterval(swalInterval); swalInterval = null; }
+
+            swalInterval = setInterval(() => {
+                const left = typeof Swal.getTimerLeft === 'function' ? Swal.getTimerLeft() : null;
+                if (left != null && $b) $b.textContent = Math.ceil(left / 1000);
+            }, 100);
+            },
+            willClose: () => {
+            if (swalInterval) { clearInterval(swalInterval); swalInterval = null; }
+            }
+        });
+        return;
+        }
+
+        if (action === 'status') {
+        // 1) Stoppe TOUJOURS le timer et nettoie l’interval
+        try {
+            if (typeof Swal.isTimerRunning === 'function' && Swal.isTimerRunning()) {
+            if (typeof Swal.stopTimer === 'function') Swal.stopTimer();
+            }
+        } catch (_) {}
+        if (swalInterval) { clearInterval(swalInterval); swalInterval = null; }
+
+        // 2) Si demandé, on ferme directement (utile pour "annulé")
+        if (first.close === true) {
+            try { if (typeof Swal.close === 'function') Swal.close(); } catch (_) {}
+            return;
+        }
+
+        // 3) Sinon on met à jour la popup (sans timer)
+        if (typeof Swal.isVisible === 'function' && Swal.isVisible()) {
+            Swal.update({
+            icon: first.icon || 'info',
+            title: first.title || '',
+            html: first.text ? `<p>${first.text}</p>` : '',
+            showConfirmButton: true,
+            timer: undefined,
+            timerProgressBar: false,
+            allowOutsideClick: true,
+            allowEscapeKey: true,
+            });
+        } else {
+            Swal.fire({
+            icon: first.icon || 'info',
+            title: first.title || '',
+            text: first.text || '',
+            showConfirmButton: true,
+            allowOutsideClick: true,
+            allowEscapeKey: true,
+            });
+        }
+        }
+    });
+    </script>
      <script src="/admin/assets/libs/jquery/jquery.min.js"></script>
         <script src="/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="/admin/assets/libs/metismenu/metisMenu.min.js"></script>

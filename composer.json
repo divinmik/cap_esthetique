@@ -7,6 +7,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "api-video/php-api-client": "^1.4",
         "bacon/bacon-qr-code": "^3.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "endroid/qr-code": "^6.0",
@@ -19,9 +20,11 @@
         "propaganistas/laravel-phone": "^6.0",
         "realrashid/sweet-alert": "^7.3",
         "spatie/laravel-permission": "^6.21",
-        "sweetalert2/laravel": "^1.1"
+        "sweetalert2/laravel": "^1.1",
+        "symfony/http-client": "^7.3"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.16",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",

@@ -4,14 +4,16 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\Inscription;
+use App\Mail\MailInfoCompte;
 use App\Models\Helper_function;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Momopaiement extends Model
 {
     //
     protected $fillable = [
-        "facture_paiement_id",
+        "invoice_id",
         "inscription_id",
         "nature",
         "error",
@@ -23,6 +25,11 @@ class Momopaiement extends Model
         "operator",
         "payer_phone",
     ];
+
+    public function inscription(): BelongsTo
+    {
+        return $this->belongsTo(Inscription::class);
+    }
 
     public static function inscriptionConfirme($id){
         
@@ -63,8 +70,25 @@ class Momopaiement extends Model
             'is_actif'           => 1,
             'password'           => bcrypt('secret'.$inscription->code), // change en prod
             'statut'             => 'candidat',
+            'role'             => 'candidat',
         ]);
+
+        //pwd
+        $mailData = [
+            'title' => 'Création de compte crée avec succès',
+            'email'=>$inscription->email,
+            'fullname' => $inscription->firstname." ".$inscription->lastname,
+            'pwd' => 'secret'.$inscription->code,
+
+        ];
+
+        if($inscription->email){
+            Helper_function::send_mail(new MailInfoCompte($mailData),$inscription->email);
+        }
+        
 
         return 'secret'.$inscription->code;
     }
+
+    
 }

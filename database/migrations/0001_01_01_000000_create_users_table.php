@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('is_actif')->default(0);
             $table->integer('user_id')->nullable();
+            $table->string('role')->default('candidat');/* admin, prof, candidat */
             $table->string('statut');/* admin, prof, candidat */
             $table->rememberToken();
             $table->timestamps();

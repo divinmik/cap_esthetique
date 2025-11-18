@@ -23,14 +23,14 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a class='menu-link' href="{{ route('cand_ges') }}" wire:navigate>
+                <a class='menu-link' href="{{ route('cand.candidats.manager') }}" wire:navigate>
                     <span class="menu-icon"><i class="fas fa-user-graduate"></i></span>
                     <span class="menu-text"> Gestion candidat  </span>
                 </a>
             </li>
             
             <li class="menu-item">
-                <a class='menu-link' href="{{ route('module_info') }}" wire:navigate>
+                <a class='menu-link' href="{{ route('cand.modules.index') }}" wire:navigate>
                     <span class="menu-icon"><i class="fas fa-file-archive"></i></span>
                     <span class="menu-text"> Gestion module </span>
                 </a>
@@ -64,15 +64,21 @@
                 <li class="menu-title">Espace candidat</li>
 
                 <li class="menu-item">
-                    <a class='menu-link' href="" wire:navigate>
+                    <a class='menu-link' href="{{ route('cand.modules.index') }}" wire:navigate>
                         <span class="menu-icon"><i class="fas fa-folder-open"></i></span>
-                        <span class="menu-text">Module disponible</span>
+                        <span class="menu-text">Mes cours</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class='menu-link' href="">
+                    <a class='menu-link' href="{{ route('cand.quizs') }}" wire:navigate>
+                        <span class="menu-icon"><i class="fas fa-chalkboard-teacher"></i></span>
+                        <span class="menu-text">Mes quiz</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class='menu-link' href="{{ route('cand.facture_cand') }}">
                         <span class="menu-icon"><i class="fas fa-file-invoice-dollar"></i></span>
-                        <span class="menu-text">Facture</span>
+                        <span class="menu-text">Mes factures</span>
                     </a>
                 </li>
             @endif

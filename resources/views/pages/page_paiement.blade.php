@@ -30,7 +30,7 @@
 
 
             <!-- Carte du formulaire -->
-            @livewire('validate-inscription')
+            @livewire('validate-inscription',['code'=>$code])
            
         </div>
     </div>
